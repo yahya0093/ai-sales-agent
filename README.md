@@ -176,13 +176,13 @@ The Agent can also classify special customer situations and route them into dedi
 
 ### WhatsApp / WATI AI Sales Workflow
 
-![WhatsApp WATI Sales Agent Workflow](whatsapp-wati-sales-agent-workflow.png)
+![WhatsApp WATI Sales Agent Workflow](screenshots/whatsapp-wati-sales-agent-workflow.png)
 
 This workflow contains the WhatsApp AI Sales Agent, customer routing, subscription-state validation, customer-state tracking, media delivery, and automated multi-stage sales follow-ups.
 
 ### Instagram & Messenger AI Sales Workflow
 
-![Instagram Messenger Sales Agent Workflow](instagram-messenger-sales-agent-workflow.png)
+![Instagram Messenger Sales Agent Workflow](screenshots/instagram-messenger-sales-agent-workflow.png)
 
 This workflow handles AI-powered sales conversations across Instagram and Facebook Messenger with direct Meta messaging integration and channel-aware routing.
 
