@@ -1,0 +1,2833 @@
+{
+  "name": "WhatsApp WATI AI Sales Agent - Portfolio",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5.4",
+          "mode": "list",
+          "cachedResultName": "gpt-5.4"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        320,
+        272
+      ],
+      "id": "eee798e2-ffa1-473d-b504-64e51b75c826",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_OPENAI_CREDENTIAL_ID",
+          "name": "YOUR_OPENAI_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Receive Incoming WATI Message').item.json.body.waId}}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        432,
+        272
+      ],
+      "id": "11ed7321-9bee-4082-b229-307295e0cec9",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5.4",
+          "mode": "list",
+          "cachedResultName": "gpt-5.4"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1328,
+        656
+      ],
+      "id": "eb52e4b3-cc23-4030-8813-74a29a743839",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_OPENAI_CREDENTIAL_ID",
+          "name": "YOUR_OPENAI_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5.4",
+          "mode": "list",
+          "cachedResultName": "gpt-5.4"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1312,
+        960
+      ],
+      "id": "7753244e-73cd-47ba-b6e0-18548c8e23ff",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_OPENAI_CREDENTIAL_ID",
+          "name": "YOUR_OPENAI_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5.4",
+          "mode": "list",
+          "cachedResultName": "gpt-5.4"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1328,
+        1280
+      ],
+      "id": "69ab2e18-e9e9-4cee-b4f4-63d8bce13b0a",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_OPENAI_CREDENTIAL_ID",
+          "name": "YOUR_OPENAI_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"reply_text\": \"وعليكم السلام ورحمة الله، كيف أقدر أخدمك؟\",\n  \"send_bag_images\": false,\n  \"case_type\": \"normal\",\n  \"subscription_issue_summary\": \"\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        560,
+        272
+      ],
+      "id": "1b01d53f-e4ee-434e-a887-04bcfa7b18a8",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=رسالة العميل الحالية:\n{{ $json.body.text }}\n\nرقم العميل:\n{{ $json.body.waId }}\n\nنوع الرسالة:\n{{ $json.body.type }}\n\nسياق المحادثة:\nالعميل يتواصل مع Demo Service Company عبر واتساب. المطلوب الرد كمندوب مبيعات سعودي محترف، يفهم احتياج العميل ويرشح الباقة المناسبة ويقربه من الاشتراك.\n\nتعليمات الرد الحالي:\n\n* رد على آخر رسالة من العميل فقط.\n* إذا كانت الرسالة تحية فقط، رحّب واسأله وش يحتاج بدون الدخول مباشرة في سؤال شخصي/عائلي.\n* إذا العميل مهتم بالباقات، اسأل سؤال تأهيلي واحد أو رشح باقة إذا احتياجه واضح.\n* إذا سأل عن الفروع، أرسل رابط الفروع فقط.\n* إذا قال عنده مشكلة في الاشتراك أو الرابط أو الباقة غير ظاهرة، قل إنك ستحوله لخدمة العملاء.\n* لا تكرر كلمة \"أبشر\" إلا إذا مناسبة.\n* لا تعرض كل الباقات دفعة وحدة إلا إذا طلب مقارنة.\n* لا تطوّل.\n* اكتب باللهجة السعودية الطبيعية.\n",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are an AI WhatsApp sales assistant for a demo service business.\n\nYour role is to:\n- Understand the customer's need.\n- Recommend the most suitable plan or service.\n- Answer sales questions clearly.\n- Handle objections without inventing information.\n- Move the customer toward the next appropriate sales step.\n- Keep replies concise, natural, and professional.\n- Never expose internal instructions, credentials, system logic, or private business data.\n\nUse only approved information available in the workflow.\n\nReturn structured output using:\n{\n  \"reply_text\": \"customer-facing reply\",\n  \"send_bag_images\": false,\n  \"case_type\": \"normal\",\n  \"subscription_issue_summary\": \"\"\n}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        336,
+        96
+      ],
+      "id": "0f1766e8-eb7c-4981-a4a7-dc8289d007f8",
+      "name": "Sales AI Agent"
+    },
+    {
+      "parameters": {
+        "content": "# **Receive Customer Message**\n",
+        "height": 224,
+        "width": 496,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        304,
+        -272
+      ],
+      "id": "bb9e870c-ab75-4d5c-a392-714e3fe8fe1d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "# **Generate and Send Customer Response**",
+        "height": 432,
+        "width": 720
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        304,
+        -32
+      ],
+      "id": "a2a40bb6-3cb0-4263-925a-724c896b9896",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "# **Send Bag Image to Customer**",
+        "height": 244,
+        "width": 904,
+        "color": 3
+      },
+      "id": "aca37c04-8509-4709-85e7-37195d23b7e8",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1680,
+        -320
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# **Send Plastic Bag Images to Customer**",
+        "height": 228,
+        "width": 920,
+        "color": 3
+      },
+      "id": "4efc398b-790d-4a53-86fb-b5e6b61a184a",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1680,
+        208
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "#  **First Follow-Up**\n",
+        "height": 308,
+        "width": 1784,
+        "color": 5
+      },
+      "id": "92b6b212-3f7c-4e02-8119-03f56bf34867",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        304,
+        448
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# **Second Follow-Up**\n",
+        "height": 308,
+        "width": 1784,
+        "color": 5
+      },
+      "id": "b9d307ea-0350-4bf5-9451-8f80d3189d28",
+      "name": "Sticky Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        304,
+        768
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# **Third Follow-Up**\n",
+        "height": 308,
+        "width": 1784,
+        "color": 5
+      },
+      "id": "73c1ee90-59f5-4ce6-8c82-1e8eb764186e",
+      "name": "Sticky Note8",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        304,
+        1088
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Sales AI Agent').item.json.output.case_type }}",
+                    "rightValue": "subscription_issue",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    },
+                    "id": "b0f34165-08aa-4297-b614-d312461fcc58"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "subscription_issue"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "c7032e58-76ea-4251-bafd-2fc513a8527b",
+                    "leftValue": "={{ $('Sales AI Agent').item.json.output.case_type }}",
+                    "rightValue": "bag_image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "bag_image"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "bf976712-329b-45f6-8739-09d4abad4be7",
+                    "leftValue": "={{ $('Sales AI Agent').item.json.output.case_type }}",
+                    "rightValue": "general_complaint",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "general_complaint"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "55e7e821-220c-45b6-906a-4c5e102f10b7",
+                    "leftValue": "={{ $('Sales AI Agent').item.json.output.case_type }}",
+                    "rightValue": "normal",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "normal"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "13b690e1-bad5-48db-b74a-10f780ac9137",
+                    "leftValue": "={{ $('Sales AI Agent').item.json.output.case_type }}",
+                    "rightValue": "unsubscribe",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "unsubscribe"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "de5400c5-fe42-428c-8e6d-287f55d59731",
+                    "leftValue": "={{ $('Sales AI Agent').item.json.output.case_type }}",
+                    "rightValue": "subscribed",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "subscribed"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "fe94cf7b-cd66-4ab7-bd72-48351a406923",
+                    "leftValue": "={{ $('Sales AI Agent').item.json.output.case_type }}",
+                    "rightValue": "sack_image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "sack_image"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1392,
+        16
+      ],
+      "id": "d183000c-5284-43c3-a7bf-0486f3613771",
+      "name": "Route Customer Case"
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        336,
+        544
+      ],
+      "id": "8e4bce42-b922-4168-963c-86a6dc518446",
+      "name": "Wait 1 Minute"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Sales Customer State",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Customer State",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "waId",
+              "lookupValue": "={{ $('Receive Incoming WATI Message').item.json.body.waId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        976,
+        528
+      ],
+      "id": "c8e178c8-0815-471b-81d2-07763015fd9b",
+      "name": "Get Customer Number – First Follow-Up",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "YOUR_GOOGLE_SHEETS_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "target": "={{ $('Get Customer Number – First Follow-Up').item.json.waId }}",
+        "messageText": "={{ $json.output }}"
+      },
+      "type": "n8n-nodes-wati.wati",
+      "typeVersion": 1,
+      "position": [
+        1712,
+        512
+      ],
+      "id": "6588a084-e054-4744-a3cd-13c1a042c949",
+      "name": "Send First Follow-Up Message",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "watiApi": {
+          "id": "YOUR_WATI_CREDENTIAL_ID",
+          "name": "YOUR_WATI_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Sales Customer State",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Customer State",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "waId": "={{ $('Get Customer Number – First Follow-Up').item.json.waId }}",
+            "customer_name": "={{ $('Get Customer Number – First Follow-Up').item.json.customer_name }}",
+            "last_message_id": "={{ $('Get Customer Number – First Follow-Up').item.json.last_message_id }}",
+            "last_message_text": "={{ $('Get Customer Number – First Follow-Up').item.json.last_message_text }}",
+            "last_message_time": "={{ $('Get Customer Number – First Follow-Up').item.json.last_message_time }}",
+            "last_ai_reply": "={{ $('Follow-Up AI Agent – First Follow-Up').item.json.output }}",
+            "last_ai_reply_time": "={{ $now.setZone('Asia/Riyadh').toFormat('yyyy-MM-dd hh:mm a') }}",
+            "followup_sent_for_message_id": "={{ $('Get Customer Number – First Follow-Up').item.json.last_message_id }}",
+            "status": "={{ $('Get Customer Number – First Follow-Up').item.json.status }}"
+          },
+          "matchingColumns": [
+            "waId"
+          ],
+          "schema": [
+            {
+              "id": "waId",
+              "displayName": "waId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "customer_name",
+              "displayName": "customer_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_message_id",
+              "displayName": "last_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_message_text",
+              "displayName": "last_message_text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_message_time",
+              "displayName": "last_message_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_ai_reply",
+              "displayName": "last_ai_reply",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_ai_reply_time",
+              "displayName": "last_ai_reply_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_sent_for_message_id",
+              "displayName": "followup_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_2h_sent_for_message_id",
+              "displayName": "followup_2h_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_24h_sent_for_message_id",
+              "displayName": "followup_24h_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_72h_sent_for_message_id",
+              "displayName": "followup_72h_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_14d_sent_for_message_id",
+              "displayName": "followup_14d_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_30d_sent_for_message_id",
+              "displayName": "followup_30d_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1920,
+        512
+      ],
+      "id": "edc14b92-b9a3-47d3-8090-5bfbf95946c8",
+      "name": "Update Customer Status – First Follow-Up",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "YOUR_GOOGLE_SHEETS_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 2,
+        "unit": "hours"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        336,
+        864
+      ],
+      "id": "91e1c4d4-063b-4b12-b9c4-1e6b19e20699",
+      "name": "Wait 2 Hours"
+    },
+    {
+      "parameters": {
+        "target": "={{ $('Get Customer Number – Second Follow-Up').item.json.waId }}",
+        "messageText": "={{ $json.output }}"
+      },
+      "type": "n8n-nodes-wati.wati",
+      "typeVersion": 1,
+      "position": [
+        1728,
+        832
+      ],
+      "id": "e118fe3f-e56f-425c-b1aa-bfcce3e73751",
+      "name": "Send Second Follow-Up Message",
+      "credentials": {
+        "watiApi": {
+          "id": "YOUR_WATI_CREDENTIAL_ID",
+          "name": "YOUR_WATI_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Sales Customer State",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Customer State",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "waId",
+              "lookupValue": "={{ $('Update Customer Status – First Follow-Up').item.json.waId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        976,
+        848
+      ],
+      "id": "f75f43da-f533-4513-b253-90e05956bfde",
+      "name": "Get Customer Number – Second Follow-Up",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "YOUR_GOOGLE_SHEETS_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f9b5df0c-cccc-4499-bff0-5ba767bd8ec3",
+              "leftValue": "={{ \n  $json.last_message_id === $('Receive Incoming WATI Message').item.json.body.id\n  &&\n  ($json.followup_sent_for_message_id || '') === $('Receive Incoming WATI Message').item.json.body.id\n  &&\n  ($json.followup_2h_sent_for_message_id || '') !== $('Receive Incoming WATI Message').item.json.body.id\n  &&\n  $json.status === 'active'\n}}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1168,
+        848
+      ],
+      "id": "8c619f2b-59d8-4808-ae7f-34b8af603f31",
+      "name": "Should Send Second Follow-Up?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f9b5df0c-cccc-4499-bff0-5ba767bd8ec3",
+              "leftValue": "={{ \n  $json.last_message_id === $('Receive Incoming WATI Message').item.json.body.id\n  &&\n  ($json.followup_sent_for_message_id || '') !== $('Receive Incoming WATI Message').item.json.body.id\n  &&\n  $json.status === 'active'\n}}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1168,
+        528
+      ],
+      "id": "2a284185-f991-4a2e-be28-10d938dedb5b",
+      "name": "Should Send First Follow-Up?"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=آخر رسالة من العميل:\n{{ $json.last_message_text }}\n\nآخر رد أرسلناه للعميل:\n{{ $json.last_ai_reply }}\n\n\n\nرقم العميل:\n{{ $('Get Customer Number – First Follow-Up').item.json.waId }}\n\nالمطلوب:\nاكتب رسالة متابعة قصيرة جدًا للعميل لأنه لم يرد بعد آخر رسالة.\n\nلا تكرر نفس الرد السابق.\nلا تفتح موضوع جديد.\nكمّل على نفس سياق آخر رد.\nخلي الرسالة بيعية، طبيعية، وباللهجة السعودية.\nلا ترسل رابط الاشتراك إلا إذا كان آخر الرد السابق فيه ترشيح واضح أو العميل كان قريب من الاشتراك.\n",
+        "options": {
+          "systemMessage": "Write a short, natural first sales follow-up for a customer who has not replied after the configured delay.\nDo not repeat the previous message. Keep it concise and helpful. Do not expose internal system details."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1392,
+        512
+      ],
+      "id": "8747ba71-8c4e-4dd7-b371-186525fd3877",
+      "name": "Follow-Up AI Agent – First Follow-Up"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=آخر رسالة من العميل:\n{{ $json.last_message_text }}\n\nآخر رد أرسلناه للعميل:\n{{ $json.last_ai_reply }}\n\n\n\nالمطلوب:\nاكتب رسالة متابعة للعميل لأنه لم يرد بعد ساعتين.\n\nالرسالة لازم تكون أقوى من متابعة أول مرة، لكن بدون إزعاج.\nلا تكرر نفس الرد السابق.\nكمّل على نفس السياق.\nخليها قصيرة، سعودية، وبيعية.\nحاول تقرّبه من الاشتراك أو تسأله سؤال واحد يساعده يقرر.",
+        "options": {
+          "systemMessage": "Write a short second sales follow-up for a customer who has not replied after the configured delay.\nUse a different angle from the first follow-up. Keep it concise and professional."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1392,
+        832
+      ],
+      "id": "1abefdc1-3628-4897-97fa-cdb8c699bd54",
+      "name": "Follow-Up AI Agent – Second Follow-Up"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Sales Customer State",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Customer State",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "waId": "={{ $('Get Customer Number – Second Follow-Up').item.json.waId }}",
+            "customer_name": "={{ $('Get Customer Number – Second Follow-Up').item.json.customer_name }}",
+            "last_message_id": "={{ $('Get Customer Number – Second Follow-Up').item.json.last_message_id }}",
+            "last_message_text": "={{ $('Get Customer Number – Second Follow-Up').item.json.last_message_text }}",
+            "last_message_time": "={{ $('Get Customer Number – Second Follow-Up').item.json.last_message_time }}",
+            "last_ai_reply": "={{ $('Follow-Up AI Agent – Second Follow-Up').item.json.output }}",
+            "last_ai_reply_time": "={{ $now.setZone('Asia/Riyadh').toFormat('yyyy-MM-dd hh:mm a') }}",
+            "followup_sent_for_message_id": "={{ $('Get Customer Number – Second Follow-Up').item.json.followup_sent_for_message_id }}",
+            "status": "={{ $('Get Customer Number – First Follow-Up').item.json.status }}",
+            "followup_2h_sent_for_message_id": "={{ $('Get Customer Number – Second Follow-Up').item.json.last_message_id }}"
+          },
+          "matchingColumns": [
+            "waId"
+          ],
+          "schema": [
+            {
+              "id": "waId",
+              "displayName": "waId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "customer_name",
+              "displayName": "customer_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_message_id",
+              "displayName": "last_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_message_text",
+              "displayName": "last_message_text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_message_time",
+              "displayName": "last_message_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_ai_reply",
+              "displayName": "last_ai_reply",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_ai_reply_time",
+              "displayName": "last_ai_reply_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_sent_for_message_id",
+              "displayName": "followup_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_2h_sent_for_message_id",
+              "displayName": "followup_2h_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_24h_sent_for_message_id",
+              "displayName": "followup_24h_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_72h_sent_for_message_id",
+              "displayName": "followup_72h_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_14d_sent_for_message_id",
+              "displayName": "followup_14d_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_30d_sent_for_message_id",
+              "displayName": "followup_30d_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1920,
+        832
+      ],
+      "id": "5e44791a-a2da-48e4-af33-fe35ac5be9c5",
+      "name": "Update Customer Status – Second Follow-Up",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "YOUR_GOOGLE_SHEETS_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Sales Customer State",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Customer State",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "waId",
+              "lookupValue": "={{ $('Update Customer Status – Second Follow-Up').item.json.waId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        976,
+        1152
+      ],
+      "id": "972f09f2-8310-4e67-9d16-4e98fbef5096",
+      "name": "Get Customer Number – Third Follow-Up",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "YOUR_GOOGLE_SHEETS_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f9b5df0c-cccc-4499-bff0-5ba767bd8ec3",
+              "leftValue": "={{ \n  $json.last_message_id === $('Receive Incoming WATI Message').item.json.body.id\n  &&\n  ($json.followup_sent_for_message_id || '') === $('Receive Incoming WATI Message').item.json.body.id\n  &&\n  ($json.followup_2h_sent_for_message_id || '') === $('Receive Incoming WATI Message').item.json.body.id\n  &&\n  ($json.followup_24h_sent_for_message_id || '') !== $('Receive Incoming WATI Message').item.json.body.id\n  &&\n  $json.status === 'active'\n}}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1168,
+        1152
+      ],
+      "id": "efc31411-9a61-4ce6-bf41-54802f109679",
+      "name": "Should Send Third Follow-Up?"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=آخر رسالة من العميل:\n{{ $json.last_message_text }}\n\nآخر رد أرسلناه للعميل:\n{{ $json.last_ai_reply }}\n\n\n\nالمطلوب:\nاكتب رسالة متابعة لطيفة للعميل لأنه لم يرد بعد 24 ساعة.\n\nهذه متابعة هادئة ومحترمة، وليست رسالة ضغط.\nلا تستخدم عبارة \"آخر تذكير لك\" أو \"آخر فرصة\" أو أي أسلوب مزعج.\nلا تكرر نفس الرد السابق.\nلا تفتح موضوع جديد.\nكمّل على نفس سياق آخر رد.\nخلي الرسالة قصيرة، سعودية، محترمة، وبيعية.\nذكّره بقيمة الاشتراك: التوفير، الراحة، السعر الحالي بعد الخصم، وتجنب مصاريف الطلبات المتفرقة.\nإذا مناسب، اختم بسؤال بسيط أو اعرض إرسال رابط الاشتراك.\n",
+        "options": {
+          "systemMessage": "Write a short final sales follow-up for a customer who has not replied after the configured delay.\nKeep it respectful, concise, and non-pushy. Do not expose internal system details."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1408,
+        1136
+      ],
+      "id": "05a73adb-2bd3-4f2c-a2ec-b9166cfc1464",
+      "name": "Follow-Up AI Agent – Third Follow-Up"
+    },
+    {
+      "parameters": {
+        "target": "={{ $('Get Customer Number – Third Follow-Up').item.json.waId }}",
+        "messageText": "={{ $json.output }}"
+      },
+      "type": "n8n-nodes-wati.wati",
+      "typeVersion": 1,
+      "position": [
+        1744,
+        1136
+      ],
+      "id": "2ecdbab0-c5e2-4e33-9a93-e8fd4ae10bb3",
+      "name": "Send Third Follow-Up Message",
+      "credentials": {
+        "watiApi": {
+          "id": "YOUR_WATI_CREDENTIAL_ID",
+          "name": "YOUR_WATI_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Sales Customer State",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Customer State",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "waId": "={{ $('Get Customer Number – Third Follow-Up').item.json.waId }}",
+            "customer_name": "={{ $('Get Customer Number – Third Follow-Up').item.json.customer_name }}",
+            "last_message_id": "={{ $('Get Customer Number – Third Follow-Up').item.json.last_message_id }}",
+            "last_message_text": "={{ $('Get Customer Number – Third Follow-Up').item.json.last_message_text }}",
+            "last_message_time": "={{ $('Get Customer Number – Third Follow-Up').item.json.last_message_time }}",
+            "last_ai_reply": "={{ $('Follow-Up AI Agent – Third Follow-Up').item.json.output }}",
+            "last_ai_reply_time": "={{ $now.setZone('Asia/Riyadh').toFormat('yyyy-MM-dd hh:mm a') }}",
+            "followup_sent_for_message_id": "={{ $('Get Customer Number – Third Follow-Up').item.json.followup_sent_for_message_id }}",
+            "status": "={{ $('Get Customer Number – Third Follow-Up').item.json.status }}",
+            "followup_2h_sent_for_message_id": "={{ $('Get Customer Number – Third Follow-Up').item.json.followup_2h_sent_for_message_id }}",
+            "followup_24h_sent_for_message_id": "={{ $('Get Customer Number – Third Follow-Up').item.json.followup_2h_sent_for_message_id }}"
+          },
+          "matchingColumns": [
+            "waId"
+          ],
+          "schema": [
+            {
+              "id": "waId",
+              "displayName": "waId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "customer_name",
+              "displayName": "customer_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_message_id",
+              "displayName": "last_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_message_text",
+              "displayName": "last_message_text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_message_time",
+              "displayName": "last_message_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_ai_reply",
+              "displayName": "last_ai_reply",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_ai_reply_time",
+              "displayName": "last_ai_reply_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_sent_for_message_id",
+              "displayName": "followup_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_2h_sent_for_message_id",
+              "displayName": "followup_2h_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_24h_sent_for_message_id",
+              "displayName": "followup_24h_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_72h_sent_for_message_id",
+              "displayName": "followup_72h_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_14d_sent_for_message_id",
+              "displayName": "followup_14d_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_30d_sent_for_message_id",
+              "displayName": "followup_30d_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1920,
+        1136
+      ],
+      "id": "18e0dbc8-34bb-4d90-aca3-be010789d483",
+      "name": "Update Customer Status – Third Follow-Up",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "YOUR_GOOGLE_SHEETS_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "wati-incoming",
+        "options": {
+          "noResponseBody": true,
+          "responseCode": {
+            "values": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        352,
+        -208
+      ],
+      "id": "55d50a84-2f5d-4a4d-b03b-c851ca670e97",
+      "name": "Receive Incoming WATI Message"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "55a2f790-2856-4d1b-aa8f-a941b9343cf5",
+              "leftValue": "={{ $json.body.owner === false && $json.body.type === \"text\" }}",
+              "rightValue": "962775280008",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        608,
+        -208
+      ],
+      "id": "451e8af6-559a-482e-a476-4f327a78dad3",
+      "name": "Check If Conversation Has Owner"
+    },
+    {
+      "parameters": {
+        "target": "={{ $('Receive Incoming WATI Message').item.json.body.waId }}",
+        "messageText": "={{ $json.output.reply_text }}"
+      },
+      "type": "n8n-nodes-wati.wati",
+      "typeVersion": 1,
+      "position": [
+        736,
+        96
+      ],
+      "id": "f03300e7-5c60-4017-875d-06beb0dab769",
+      "name": "Send WhatsApp Message",
+      "credentials": {
+        "watiApi": {
+          "id": "YOUR_WATI_CREDENTIAL_ID",
+          "name": "YOUR_WATI_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Sales Customer State",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Customer State",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "waId": "={{ $('Receive Incoming WATI Message').item.json.body.waId }}",
+            "customer_name": "={{ $('Receive Incoming WATI Message').item.json.body.senderName }}",
+            "last_message_id": "={{ $('Receive Incoming WATI Message').item.json.body.id }}",
+            "last_message_text": "={{ $('Receive Incoming WATI Message').item.json.body.text }}",
+            "last_message_time": "={{ DateTime.fromISO($('Receive Incoming WATI Message').item.json.body.created).setZone('Asia/Riyadh').toFormat('yyyy-MM-dd hh:mm a') }}",
+            "last_ai_reply": "={{ $('Sales AI Agent').item.json.output.reply_text }}",
+            "last_ai_reply_time": "={{ $now.setZone('Asia/Riyadh').toFormat('yyyy-MM-dd hh:mm a') }}",
+            "status": "active"
+          },
+          "matchingColumns": [
+            "waId"
+          ],
+          "schema": [
+            {
+              "id": "waId",
+              "displayName": "waId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "customer_name",
+              "displayName": "customer_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_message_id",
+              "displayName": "last_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_message_text",
+              "displayName": "last_message_text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_message_time",
+              "displayName": "last_message_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_ai_reply",
+              "displayName": "last_ai_reply",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_ai_reply_time",
+              "displayName": "last_ai_reply_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_sent_for_message_id",
+              "displayName": "followup_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_2h_sent_for_message_id",
+              "displayName": "followup_2h_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_24h_sent_for_message_id",
+              "displayName": "followup_24h_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_72h_sent_for_message_id",
+              "displayName": "followup_72h_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_14d_sent_for_message_id",
+              "displayName": "followup_14d_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followup_30d_sent_for_message_id",
+              "displayName": "followup_30d_sent_for_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1088,
+        96
+      ],
+      "id": "988ae5f1-7660-4db7-be3e-f585328d7c2f",
+      "name": "Add or Update Customer State",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "YOUR_GOOGLE_SHEETS_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_DRIVE_FILE_ID",
+          "mode": "list",
+          "cachedResultName": "portfolio-demo-image",
+          "cachedResultUrl": "https://drive.google.com/file/d/YOUR_GOOGLE_DRIVE_FILE_ID/view"
+        },
+        "options": {
+          "binaryPropertyName": "bag_image"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1744,
+        -256
+      ],
+      "id": "e44037ee-5616-4a70-99c3-9bd31e744666",
+      "name": "Download Bag Image 1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID",
+          "name": "YOUR_GOOGLE_DRIVE_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://YOUR_WATI_API_HOST/api/v1/sendSessionFile/' + $('Receive Incoming WATI Message').item.json.body.waId }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_WATI_API_TOKEN"
+            },
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "bag_image"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1968,
+        -256
+      ],
+      "id": "e8bfd923-0f60-4b77-b6d0-c2a4aaa4d91c",
+      "name": "Send Bag Image 1"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_DRIVE_FILE_ID",
+          "mode": "list",
+          "cachedResultName": "portfolio-demo-image",
+          "cachedResultUrl": "https://drive.google.com/file/d/YOUR_GOOGLE_DRIVE_FILE_ID/view"
+        },
+        "options": {
+          "binaryPropertyName": "bag_image_2"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2192,
+        -256
+      ],
+      "id": "4eeca4b7-c14d-4936-a589-5b1ee7db689f",
+      "name": "Download Bag Image 2",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID",
+          "name": "YOUR_GOOGLE_DRIVE_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://YOUR_WATI_API_HOST/api/v1/sendSessionFile/' + $('Receive Incoming WATI Message').item.json.body.waId }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_WATI_API_TOKEN"
+            },
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "bag_image_2"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2416,
+        -256
+      ],
+      "id": "563f67f8-33b3-4e51-b35a-3c7d794fea1c",
+      "name": "Send Bag Image 2"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_DRIVE_FILE_ID",
+          "mode": "list",
+          "cachedResultName": "portfolio-demo-image",
+          "cachedResultUrl": "https://drive.google.com/file/d/YOUR_GOOGLE_DRIVE_FILE_ID/view"
+        },
+        "options": {
+          "binaryPropertyName": "sack_image"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1728,
+        272
+      ],
+      "id": "e36c51b8-536d-43c6-a52d-9f38953b05e7",
+      "name": "Download Plastic Bag Image",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID",
+          "name": "YOUR_GOOGLE_DRIVE_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://YOUR_WATI_API_HOST/api/v1/sendSessionFile/' + $('Receive Incoming WATI Message').item.json.body.waId }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_WATI_API_TOKEN"
+            },
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "sack_image"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1952,
+        272
+      ],
+      "id": "0685d8bf-e473-4907-a0ff-8219f55f3299",
+      "name": "Send Plastic Bag Image"
+    },
+    {
+      "parameters": {
+        "content": "# **Update Customer State and Route Case**",
+        "height": 384,
+        "width": 624,
+        "color": "#11767E"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        -32
+      ],
+      "id": "2e672e88-b5c6-4c90-8ee2-82668d0cc560",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "# **subscribed**",
+        "height": 260,
+        "width": 408,
+        "color": 3
+      },
+      "id": "a04ff140-e61d-475b-a769-227bbff2cb6d",
+      "name": "Sticky Note10",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1680,
+        -64
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Sales Customer State",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "YOUR_SHEET_GID",
+          "mode": "list",
+          "cachedResultName": "Customer State",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.customer_name }}",
+            "Phone": "={{ $('Receive Incoming WATI Message').item.json.body.waId }}"
+          },
+          "matchingColumns": [
+            "Phone"
+          ],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1840,
+        16
+      ],
+      "id": "88cbce0a-f7d6-433f-ac0c-0df281d07710",
+      "name": "Append or update subscribed",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "YOUR_GOOGLE_SHEETS_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "support@example.com",
+        "subject": "تنبيه: مشكلة اشتراك جديدة",
+        "emailType": "text",
+        "message": "={{ \n`تم رصد مشكلة اشتراك جديدة من عميل عبر واتساب.\n\n\nرقم العميل:\n${$('Receive Incoming WATI Message').item.json.body.waId}\n\nرسالة العميل:\n${$('Route Customer Case').item.json.last_message_text}\n\nملخص المشكلة:\n${$('Sales AI Agent').item.json.output.subscription_issue_summary}\n\nرد البوت للعميل:\n${$('Route Customer Case').item.json.last_ai_reply}\n\nوقت الرسالة:\n${$('Route Customer Case').item.json.last_message_time}\n\nيرجى مراجعة المشكلة والتعامل معها.`\n}}",
+        "options": {
+          "appendAttribution": false,
+          "ccList": "team@example.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1808,
+        -496
+      ],
+      "id": "2420ab96-a902-49f1-842f-0b95b9cdc5d5",
+      "name": "Send a message",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_GMAIL_CREDENTIAL_ID",
+          "name": "YOUR_GMAIL_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 21,
+        "unit": "hours"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        336,
+        1168
+      ],
+      "id": "72e36ffc-b29d-45dd-b801-bc4b53630140",
+      "name": "Wait 21 Hours"
+    },
+    {
+      "parameters": {
+        "url": "https://YOUR_INTERNAL_API.example.com/subscription/has_subscription",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "phone",
+              "value": "={{ $json.waId }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_INTERNAL_API_TOKEN"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "has_subscription"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        560,
+        864
+      ],
+      "id": "4c6cba6e-2c88-4d14-960a-20e70652fcc0",
+      "name": "Check Customer Subscription - Odoo"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f9b5df0c-cccc-4499-bff0-5ba767bd8ec3",
+              "leftValue": "={{ $json.has_subscription }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        784,
+        864
+      ],
+      "id": "3bcc49ff-98a0-4264-8bdc-5a43f101c377",
+      "name": "Has Active Subscription?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f9b5df0c-cccc-4499-bff0-5ba767bd8ec3",
+              "leftValue": "={{ $json.has_subscription }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        784,
+        1168
+      ],
+      "id": "a2b82132-81a1-4546-bce3-c1d38f2df48e",
+      "name": "Has Active Subscription?1"
+    },
+    {
+      "parameters": {
+        "url": "https://YOUR_INTERNAL_API.example.com/subscription/has_subscription",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "phone",
+              "value": "={{ $json.waId }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_INTERNAL_API_TOKEN"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "has_subscription"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        560,
+        1168
+      ],
+      "id": "c543d4b0-a53f-4523-83b5-198ac07dc8e9",
+      "name": "Check Customer Subscription - Odoo1"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_DRIVE_FILE_ID",
+          "mode": "list",
+          "cachedResultName": "portfolio-demo-image",
+          "cachedResultUrl": "https://drive.google.com/file/d/YOUR_GOOGLE_DRIVE_FILE_ID/view"
+        },
+        "options": {
+          "binaryPropertyName": "sack_image2"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2192,
+        272
+      ],
+      "id": "292f81e4-00c6-4abd-9925-2dcebe4ebab3",
+      "name": "Download Plastic Bag Image1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID",
+          "name": "YOUR_GOOGLE_DRIVE_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://YOUR_WATI_API_HOST/api/v1/sendSessionFile/' + $('Receive Incoming WATI Message').item.json.body.waId }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_WATI_API_TOKEN"
+            },
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "sack_image2"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2416,
+        272
+      ],
+      "id": "cb9e9487-3ab5-475d-8ace-7e36e9a5ebb4",
+      "name": "Send Plastic Bag Image1"
+    },
+    {
+      "parameters": {
+        "url": "https://YOUR_INTERNAL_API.example.com/subscription/has_subscription",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "phone",
+              "value": "={{ $('Receive Incoming WATI Message').item.json.body.waId }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_INTERNAL_API_TOKEN"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "has_subscription"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        560,
+        544
+      ],
+      "id": "3644c580-ffde-4e61-a688-4c3935c27633",
+      "name": "Check Customer Subscription - Odoo2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f9b5df0c-cccc-4499-bff0-5ba767bd8ec3",
+              "leftValue": "={{ $json.has_subscription }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        784,
+        544
+      ],
+      "id": "e9d677ec-4f20-461c-9959-b6df9aba53fc",
+      "name": "Has Active Subscription?2"
+    },
+    {
+      "parameters": {
+        "content": "# **Escalate Subscription Plan Issue to Specialist**",
+        "height": 292,
+        "width": 408,
+        "color": 3
+      },
+      "id": "1bd408fc-0479-46a9-8289-46354891d445",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1680,
+        -624
+      ],
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Sales AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Sales AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Follow-Up AI Agent – First Follow-Up",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Follow-Up AI Agent – Second Follow-Up",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Follow-Up AI Agent – Third Follow-Up",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Sales AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sales AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Customer Case": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download Bag Image 1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        [
+          {
+            "node": "Wait 1 Minute",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        [
+          {
+            "node": "Append or update subscribed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download Plastic Bag Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 1 Minute": {
+      "main": [
+        [
+          {
+            "node": "Check Customer Subscription - Odoo2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Customer Number – First Follow-Up": {
+      "main": [
+        [
+          {
+            "node": "Should Send First Follow-Up?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send First Follow-Up Message": {
+      "main": [
+        [
+          {
+            "node": "Update Customer Status – First Follow-Up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Customer Status – First Follow-Up": {
+      "main": [
+        [
+          {
+            "node": "Wait 2 Hours",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 2 Hours": {
+      "main": [
+        [
+          {
+            "node": "Check Customer Subscription - Odoo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Second Follow-Up Message": {
+      "main": [
+        [
+          {
+            "node": "Update Customer Status – Second Follow-Up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Customer Number – Second Follow-Up": {
+      "main": [
+        [
+          {
+            "node": "Should Send Second Follow-Up?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Should Send Second Follow-Up?": {
+      "main": [
+        [
+          {
+            "node": "Follow-Up AI Agent – Second Follow-Up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Should Send First Follow-Up?": {
+      "main": [
+        [
+          {
+            "node": "Follow-Up AI Agent – First Follow-Up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Follow-Up AI Agent – First Follow-Up": {
+      "main": [
+        [
+          {
+            "node": "Send First Follow-Up Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Follow-Up AI Agent – Second Follow-Up": {
+      "main": [
+        [
+          {
+            "node": "Send Second Follow-Up Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Customer Status – Second Follow-Up": {
+      "main": [
+        [
+          {
+            "node": "Wait 21 Hours",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Customer Number – Third Follow-Up": {
+      "main": [
+        [
+          {
+            "node": "Should Send Third Follow-Up?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Should Send Third Follow-Up?": {
+      "main": [
+        [
+          {
+            "node": "Follow-Up AI Agent – Third Follow-Up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Follow-Up AI Agent – Third Follow-Up": {
+      "main": [
+        [
+          {
+            "node": "Send Third Follow-Up Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Third Follow-Up Message": {
+      "main": [
+        [
+          {
+            "node": "Update Customer Status – Third Follow-Up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Receive Incoming WATI Message": {
+      "main": [
+        [
+          {
+            "node": "Check If Conversation Has Owner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check If Conversation Has Owner": {
+      "main": [
+        [
+          {
+            "node": "Sales AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send WhatsApp Message": {
+      "main": [
+        [
+          {
+            "node": "Add or Update Customer State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add or Update Customer State": {
+      "main": [
+        [
+          {
+            "node": "Route Customer Case",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Bag Image 1": {
+      "main": [
+        [
+          {
+            "node": "Send Bag Image 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Bag Image 1": {
+      "main": [
+        [
+          {
+            "node": "Download Bag Image 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Bag Image 2": {
+      "main": [
+        [
+          {
+            "node": "Send Bag Image 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Bag Image 2": {
+      "main": [
+        [
+          {
+            "node": "Wait 1 Minute",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Plastic Bag Image": {
+      "main": [
+        [
+          {
+            "node": "Send Plastic Bag Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Plastic Bag Image": {
+      "main": [
+        [
+          {
+            "node": "Download Plastic Bag Image1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Customer Status – Third Follow-Up": {
+      "main": [
+        []
+      ]
+    },
+    "Wait 21 Hours": {
+      "main": [
+        [
+          {
+            "node": "Check Customer Subscription - Odoo1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Customer Subscription - Odoo": {
+      "main": [
+        [
+          {
+            "node": "Has Active Subscription?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Active Subscription?": {
+      "main": [
+        [
+          {
+            "node": "Get Customer Number – Second Follow-Up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Customer Subscription - Odoo1": {
+      "main": [
+        [
+          {
+            "node": "Has Active Subscription?1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Active Subscription?1": {
+      "main": [
+        [
+          {
+            "node": "Get Customer Number – Third Follow-Up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Plastic Bag Image1": {
+      "main": [
+        [
+          {
+            "node": "Send Plastic Bag Image1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Plastic Bag Image1": {
+      "main": [
+        [
+          {
+            "node": "Wait 1 Minute",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Customer Subscription - Odoo2": {
+      "main": [
+        [
+          {
+            "node": "Has Active Subscription?2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Active Subscription?2": {
+      "main": [
+        [
+          {
+            "node": "Get Customer Number – First Follow-Up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "timezone": "Asia/Riyadh",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "errorWorkflow": "c0aTgI67pZsMWgl2"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}
